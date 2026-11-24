@@ -38,6 +38,11 @@ jobs:
           print("status:", report["status"])
           print("digest matches:", report["digest"]["matches"])
           print("policy gaps:", len(report["policy"]["gaps"]))
+          print(
+              f"::notice title=ChangePassport E2E::status={report['status']} "
+              f"schema={report['schema']['valid']} digest={report['digest']['matches']} "
+              f"gaps={len(report['policy']['gaps'])} source={p['reviews'][0]['source']}"
+          )
           assert report["status"] == "pass", report
           assert report["schema"]["valid"] is True
           assert report["digest"]["matches"] is True
