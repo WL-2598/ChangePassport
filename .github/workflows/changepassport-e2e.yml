@@ -2,7 +2,10 @@
 # Removed after the verification run; not part of the delivered product.
 name: ChangePassport Action E2E (temporary)
 
-on: workflow_dispatch
+on:
+  push:
+    branches: ["arena/**"]
+  workflow_dispatch:
 
 permissions:
   contents: read
