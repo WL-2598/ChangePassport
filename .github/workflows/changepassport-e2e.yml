@@ -1,0 +1,53 @@
+# Copy this file into .github/workflows/ to reproduce the Action E2E check.
+# It was used temporarily on 2026-11-24 to validate the composite Action on a
+# real GitHub runner; see docs/validation-record.md for the recorded result.
+name: ChangePassport Action E2E (manual)
+
+on:
+  push:
+    branches: ["arena/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: read
+  actions: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Run local Action with offline snapshot
+        uses: ./
+        with:
+          config: tests/fixtures/config.json
+          snapshot: tests/fixtures/snapshot.json
+          output-dir: e2e-dist
+          python-version: "3.12"
+      - name: Inspect generated artifacts
+        run: |
+          ls -l e2e-dist
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          passport = json.loads(Path("e2e-dist/passport.json").read_text())
+          report = json.loads(Path("e2e-dist/verify.json").read_text())
+          markdown = Path("e2e-dist/passport.md").read_text()
+          print("status:", report["status"])
+          print("digest matches:", report["digest"]["matches"])
+          print("policy gaps:", len(report["policy"]["gaps"]))
+          print(
+              f"::notice title=ChangePassport E2E::status={report['status']} "
+              f"schema={report['schema']['valid']} digest={report['digest']['matches']} "
+              f"gaps={len(report['policy']['gaps'])} source={passport['reviews'][0]['source']}"
+          )
+          assert report["status"] == "pass", report
+          assert report["schema"]["valid"] is True
+          assert report["digest"]["matches"] is True
+          assert passport["change"]["title"] == "Add signed release manifest"
+          assert "## 审批记录（仅 GitHub Reviews）" in markdown
+          assert "内容摘要只用于检测内容变化" in markdown
+          PY

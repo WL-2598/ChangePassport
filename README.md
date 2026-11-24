@@ -72,6 +72,7 @@ changepassport render --input dist/passport.json --verification dist/verify.json
 - 付费试点运行手册：`docs/pilot-runbook.md`
 - 访谈提纲：`docs/interview-guide.md`
 - 实际验证记录：`docs/validation-record.md`
+- 合规框架参考（仅解释字段动机）：`docs/compliance-references.md`
 
 ## 验证记录
 

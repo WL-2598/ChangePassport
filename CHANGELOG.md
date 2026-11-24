@@ -6,6 +6,7 @@
 
 ### Added
 
+- `docs/compliance-references.md`：用公开资料解释字段设计动机，并明确“不是认证结论”。
 - `docs/validation-record.md`：本地检查、GitHub CI 与 Action E2E 的真实 run ID（含一次失败后修正的记录），以及明确的未验证项。
 - `examples/github-action/e2e-validation.yml`：可手动重跑的 Action E2E 工作流副本。
 - `examples/gaps/`：删除必需输入后的 JSON/验证报告/Markdown 缺口示例，含 Golden Test。
@@ -21,6 +22,8 @@
 
 - 空白仓库仅有的 `README.md` 扩充为可复制的本地验证入口。
 - 配置校验改为严格模式：未知键、错误类型和缺失的声明字段会给出明确错误；Markdown 中缺失事实的来源列显示“缺失”。
+- 按 PEP 639 更新许可证元数据（SPDX 字符串 + `license-files`，构建后端最低 77.0.3），移除构建告警。
+- GitHub Actions 升级到 `checkout@v7.0.1`、`setup-python@v7.1.0`、`upload-artifact@v7.0.2`，消除 Node 20 弃用告警。
 
 ### Security / business boundaries
 
