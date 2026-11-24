@@ -1,11 +1,9 @@
-# Temporary validation workflow: run the composite Action on a real GitHub runner.
-# Removed after the verification run; not part of the delivered product.
-name: ChangePassport Action E2E (temporary)
+# Copy this file into .github/workflows/ to reproduce the Action E2E check.
+# It was used temporarily on 2026-11-24 to validate the composite Action on a
+# real GitHub runner; see docs/validation-record.md for the recorded result.
+name: ChangePassport Action E2E (manual)
 
-on:
-  push:
-    branches: ["arena/**"]
-  workflow_dispatch:
+on: workflow_dispatch
 
 permissions:
   contents: read

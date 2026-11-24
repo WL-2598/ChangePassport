@@ -6,6 +6,8 @@
 
 ### Added
 
+- `docs/validation-record.md`：本地检查、GitHub CI 与 Action E2E 的真实 run ID（含一次失败后修正的记录），以及明确的未验证项。
+- `examples/github-action/e2e-validation.yml`：可手动重跑的 Action E2E 工作流副本。
 - `examples/gaps/`：删除必需输入后的 JSON/验证报告/Markdown 缺口示例，含 Golden Test。
 - `scripts/check.sh`：一条命令复现全部本地质量门禁。
 - 根目录 `SECURITY.md`，指向完整安全与权限文档。

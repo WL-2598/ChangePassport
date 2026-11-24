@@ -71,7 +71,8 @@ changepassport render --input dist/passport.json --verification dist/verify.json
 - 15 分钟上手：`docs/quickstart.md`
 - 付费试点运行手册：`docs/pilot-runbook.md`
 - 访谈提纲：`docs/interview-guide.md`
+- 实际验证记录：`docs/validation-record.md`
 
 ## 验证记录
 
-本地沙箱（Python 3.11.2）：`ruff format --check .`、`ruff check .`、`mypy`、`pytest`（29 项）、`pip-audit --skip-editable` 均已执行并通过。GitHub Actions [CI run 45348090402](https://github.com/WL-2598/ChangePassport/actions/runs/45348090402) 在 Python 3.11 与 3.12 上全部通过（格式、Lint、类型、测试、依赖审计）。**尚未验证**：真实客户 PR 上的 Action、GHES、第三方渗透测试、客户访谈与付款。许可证为空白仓库新增的 Apache-2.0；未创建公开 Release。
+本地沙箱（Python 3.11.2）：`ruff format --check .`、`ruff check .`、`mypy`、`pytest`（34 项）、`pip-audit --skip-editable` 均已执行并通过。GitHub Actions 的 CI 矩阵与 [Action E2E run 45368636797](https://github.com/WL-2598/ChangePassport/actions/runs/45368636797) 均已实际跑通；完整 run ID 与失败记录见 `docs/validation-record.md`。**尚未验证**：真实客户 PR 上的人类 Review + Action、GHES、第三方渗透测试、客户访谈与付款。许可证为空白仓库新增的 Apache-2.0；未创建公开 Release。
