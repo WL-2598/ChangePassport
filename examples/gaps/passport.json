@@ -1,0 +1,154 @@
+{
+  "schema_version": "1.0.0",
+  "generator": {
+    "name": "changepassport",
+    "version": "0.1.0",
+    "generated_at": "2026-01-15T10:30:00Z"
+  },
+  "repository": {
+    "owner": "example-org",
+    "name": "demo-service",
+    "url": "https://github.com/example-org/demo-service",
+    "default_branch": "main"
+  },
+  "policy": {
+    "id": "default-v1",
+    "required": [
+      "purpose",
+      "external_ticket",
+      "approval",
+      "successful_checks",
+      "deployment",
+      "rollback_plan",
+      "exception_disclosure"
+    ]
+  },
+  "change": {
+    "id": "PR #43",
+    "kind": "pull_request",
+    "title": "Draft change without review evidence",
+    "purpose": "missing",
+    "author": "dev-alice",
+    "merged_at": "missing",
+    "url": "https://github.com/example-org/demo-service/pull/43",
+    "head_sha": "3333333333333333333333333333333333333333",
+    "commit_shas": [],
+    "external_ticket": {
+      "reference": "missing",
+      "url": "missing"
+    }
+  },
+  "reviews": [],
+  "approvals": [],
+  "checks": [],
+  "deployments": [],
+  "rollbacks": [],
+  "rollback_plan": {
+    "description": "missing",
+    "source_url": "missing"
+  },
+  "exceptions": [],
+  "exception_review": {
+    "status": "not_reviewed",
+    "source": "declared"
+  },
+  "completeness": {
+    "missing": [
+      {
+        "field": "change.purpose",
+        "reason": "配置中未填写变更目的",
+        "expected_source": "declared config"
+      },
+      {
+        "field": "change.external_ticket",
+        "reason": "配置中未填写外部工单编号或链接",
+        "expected_source": "declared config"
+      },
+      {
+        "field": "change.merged_at",
+        "reason": "没有可用的合并时间（commit 模式可为未知）",
+        "expected_source": "snapshot"
+      },
+      {
+        "field": "approvals",
+        "reason": "没有 GitHub APPROVED 审核记录",
+        "expected_source": "snapshot"
+      },
+      {
+        "field": "checks",
+        "reason": "没有取到 Check/Status 记录",
+        "expected_source": "snapshot"
+      },
+      {
+        "field": "deployments",
+        "reason": "人工未声明部署记录",
+        "expected_source": "declared config"
+      },
+      {
+        "field": "rollbacks",
+        "reason": "人工未声明回滚记录",
+        "expected_source": "declared config"
+      },
+      {
+        "field": "rollback_plan",
+        "reason": "人工未填写回滚说明或链接",
+        "expected_source": "declared config"
+      },
+      {
+        "field": "exception_review",
+        "reason": "尚未人工确认例外披露",
+        "expected_source": "declared config"
+      }
+    ],
+    "unknown": [
+      "change.purpose",
+      "change.external_ticket",
+      "approvals",
+      "checks",
+      "deployments",
+      "rollback_plan"
+    ]
+  },
+  "provenance": {
+    "change.title": {
+      "source": "snapshot",
+      "url": "https://github.com/example-org/demo-service/pull/43"
+    },
+    "change.purpose": {
+      "source": "missing",
+      "url": "missing"
+    },
+    "change.external_ticket": {
+      "source": "missing",
+      "url": "missing"
+    },
+    "approvals": {
+      "source": "missing",
+      "url": "https://github.com/example-org/demo-service/pull/43"
+    },
+    "checks": {
+      "source": "missing",
+      "url": "https://github.com/example-org/demo-service/pull/43"
+    },
+    "deployments": {
+      "source": "missing",
+      "url": "missing"
+    },
+    "rollback_plan": {
+      "source": "missing",
+      "url": "missing"
+    },
+    "exception_review": {
+      "source": "declared",
+      "url": "missing"
+    },
+    "content_digest": {
+      "source": "computed",
+      "url": "missing"
+    }
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "26ba9507e0ee5517b2ba0dc44a6a083b1d858cd7edcd57a945d0262da4e3bdb9"
+  }
+}

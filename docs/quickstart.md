@@ -19,7 +19,7 @@
 4. 按 `docs/permissions.md` 设置只读 `permissions`；确认没有写权限。
 5. 在测试仓库添加最小 `changepassport.json`（可用 `changepassport init` 生成后填写人工声明字段）。
 6. 重新提交 PR，等待 Action 完成；下载 Artifact，检查 `passport.json`、`verify.json`、`passport.md`。
-7. 删除配置里的 `purpose`（或一项人工声明），再次运行：验证报告必须出现明确的 `gap`，Action **仍然不阻断**发布。
+7. 删除配置里的 `purpose`（或一项人工声明），再次运行：验证报告必须出现明确的 `gap`，Action **仍然不阻断**发布。可对照 `examples/gaps/` 的现成缺口示例。
 8. 在日志与产物中搜索 token 字符串，确认没有泄漏；确认产物里没有源代码正文。
 
 ## 通过标准

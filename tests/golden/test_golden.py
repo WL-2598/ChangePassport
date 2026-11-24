@@ -30,3 +30,17 @@ def test_golden_example_verifies_as_pass() -> None:
     assert report["status"] == "pass"
     assert report["schema"]["valid"] is True
     assert report["digest"]["matches"] is True
+
+
+def test_gaps_example_reports_gaps_without_inventing_facts() -> None:
+    gaps_dir = ROOT / "examples" / "gaps"
+    passport = json.loads((gaps_dir / "passport.json").read_text(encoding="utf-8"))
+    report = json.loads((gaps_dir / "verify.json").read_text(encoding="utf-8"))
+    assert report["status"] == "gaps"
+    assert len(report["policy"]["gaps"]) == 7
+    assert passport["change"]["purpose"] == "missing"
+    assert passport["approvals"] == []
+    assert len(passport["completeness"]["missing"]) == 9
+    assert (gaps_dir / "passport.md").read_text(encoding="utf-8") == render_markdown(
+        passport, report
+    )

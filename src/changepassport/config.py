@@ -64,21 +64,53 @@ def default_config(
     }
 
 
+def _object(value: Any, label: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise ConfigError(f"{label} must be an object")
+    return value
+
+
+def _keys(value: dict[str, Any], allowed: tuple[str, ...], label: str) -> None:
+    unknown = sorted(set(value) - set(allowed))
+    if unknown:
+        raise ConfigError(f"{label} has unknown key(s): {', '.join(unknown)}")
+
+
+def _text_field(value: dict[str, Any], key: str, label: str) -> str:
+    item = value.get(key)
+    if not isinstance(item, str) or not item:
+        raise ConfigError(f"{label}.{key} must be a non-empty string or 'missing'")
+    return item
+
+
+def _list_of_records(value: Any, label: str, fields: tuple[str, ...]) -> None:
+    if not isinstance(value, list):
+        raise ConfigError(f"{label} must be a list")
+    for index, item in enumerate(value):
+        record = _object(item, f"{label}[{index}]")
+        _keys(record, fields, f"{label}[{index}]")
+        for field in fields:
+            _text_field(record, field, f"{label}[{index}]")
+
+
 def validate_config(raw: Any) -> dict[str, Any]:
-    """Validate only the shape we consume; unknown keys are rejected as typos."""
-    if not isinstance(raw, dict):
-        raise ConfigError("configuration must be a JSON object")
-    if raw.get("version") != 1:
+    """Validate the shape we consume; unknown keys are rejected as typos."""
+    config = _object(raw, "configuration")
+    _keys(
+        config,
+        ("version", "repository", "change", "declared", "policy"),
+        "configuration",
+    )
+    if config.get("version") != 1:
         raise ConfigError("configuration 'version' must be 1")
-    for key in ("repository", "change", "declared", "policy"):
-        if not isinstance(raw.get(key), dict):
-            raise ConfigError(f"configuration '{key}' must be an object")
-    repository = raw["repository"]
-    for key in ("owner", "name"):
-        value = repository.get(key)
-        if not isinstance(value, str) or not value:
-            raise ConfigError(f"repository.{key} must be a non-empty string")
-    change = raw["change"]
+
+    repository = _object(config.get("repository"), "repository")
+    _keys(repository, ("owner", "name", "url"), "repository")
+    for key in ("owner", "name", "url"):
+        _text_field(repository, key, "repository")
+
+    change = _object(config.get("change"), "change")
+    _keys(change, ("pull_request", "commit_sha"), "change")
     pull_request = change.get("pull_request", MISSING)
     commit_sha = change.get("commit_sha", MISSING)
     if (
@@ -91,16 +123,50 @@ def validate_config(raw: Any) -> dict[str, Any]:
     if pull_request == MISSING and commit_sha == MISSING:
         raise ConfigError("set change.pull_request or change.commit_sha")
 
-    declared = raw["declared"]
-    for key in ("deployments", "rollbacks", "exceptions"):
-        if declared.get(key) is None:
-            declared[key] = []
-        if not isinstance(declared[key], list):
-            raise ConfigError(f"declared.{key} must be a list")
+    declared = _object(config.get("declared"), "declared")
+    _keys(
+        declared,
+        (
+            "purpose",
+            "external_ticket",
+            "deployments",
+            "rollbacks",
+            "exceptions",
+            "exceptions_reviewed",
+            "rollback_plan",
+        ),
+        "declared",
+    )
+    _text_field(declared, "purpose", "declared")
+    ticket = _object(declared.get("external_ticket"), "declared.external_ticket")
+    _keys(ticket, ("reference", "url"), "declared.external_ticket")
+    for key in ("reference", "url"):
+        _text_field(ticket, key, "declared.external_ticket")
+    plan = _object(declared.get("rollback_plan"), "declared.rollback_plan")
+    _keys(plan, ("description", "source_url"), "declared.rollback_plan")
+    for key in ("description", "source_url"):
+        _text_field(plan, key, "declared.rollback_plan")
+    _list_of_records(
+        declared.get("deployments"),
+        "declared.deployments",
+        ("environment", "deployed_at", "actor", "status", "source_url"),
+    )
+    _list_of_records(
+        declared.get("rollbacks"),
+        "declared.rollbacks",
+        ("environment", "rolled_back_at", "actor", "notes", "source_url"),
+    )
+    _list_of_records(
+        declared.get("exceptions"),
+        "declared.exceptions",
+        ("type", "description", "approved_by", "source_url"),
+    )
     if not isinstance(declared.get("exceptions_reviewed"), bool):
         raise ConfigError("declared.exceptions_reviewed must be a boolean")
 
-    policy = raw["policy"]
+    policy = _object(config.get("policy"), "policy")
+    _keys(policy, ("id", "require"), "policy")
+    _text_field(policy, "id", "policy")
     requirements = policy.get("require")
     if not isinstance(requirements, list) or not all(
         isinstance(item, str) for item in requirements
@@ -109,7 +175,7 @@ def validate_config(raw: Any) -> dict[str, Any]:
     unknown = sorted(set(requirements) - set(KNOWN_REQUIREMENTS))
     if unknown:
         raise ConfigError(f"unknown policy requirement(s): {', '.join(unknown)}")
-    return raw
+    return config
 
 
 def load_config(path: Path) -> dict[str, Any]:

@@ -9,6 +9,18 @@ def _cell(value: Any) -> str:
     return str(value).replace("|", "\\|").replace("\n", " ").replace("\r", " ")
 
 
+def _fact_source(value: Any, label: str) -> str:
+    return label if value != "missing" else "缺失"
+
+
+def _ticket_text(ticket: dict[str, Any]) -> str:
+    reference = str(ticket.get("reference", "missing"))
+    url = str(ticket.get("url", "missing"))
+    if reference == "missing" and url == "missing":
+        return "missing"
+    return f"{reference} {url}".strip()
+
+
 def _table(headers: list[str], rows: list[list[Any]]) -> list[str]:
     lines = [
         "| " + " | ".join(headers) + " |",
@@ -47,16 +59,13 @@ def render_markdown(passport: dict[str, Any], verification: dict[str, Any] | Non
                 ],
                 [
                     "外部工单",
-                    (
-                        f"{change['external_ticket']['reference']} "
-                        f"{change['external_ticket']['url']}"
-                    ).strip(),
-                    "人工声明",
+                    _ticket_text(change["external_ticket"]),
+                    _fact_source(_ticket_text(change["external_ticket"]), "人工声明"),
                 ],
-                ["变更链接", change["url"], change["url"]],
-                ["作者", change["author"], "GitHub"],
-                ["合并时间", change["merged_at"], "GitHub"],
-                ["HEAD SHA", change["head_sha"], "GitHub"],
+                ["变更链接", change["url"], _fact_source(change["url"], change["url"])],
+                ["作者", change["author"], _fact_source(change["author"], "GitHub")],
+                ["合并时间", change["merged_at"], _fact_source(change["merged_at"], "GitHub")],
+                ["HEAD SHA", change["head_sha"], _fact_source(change["head_sha"], "GitHub")],
                 ["Commit 数量", len(change["commit_shas"]), "GitHub"],
             ],
         )

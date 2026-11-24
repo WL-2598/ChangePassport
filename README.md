@@ -53,6 +53,12 @@ changepassport render --input dist/passport.json --verification dist/verify.json
 
 见 `examples/github-action/workflow.yml`。默认 report-only、不阻断发布、以 Artifact 保存 JSON/验证报告/Markdown，权限最小化。Action 只调用 GitHub REST API；安装依赖时会访问 PyPI。详见 `docs/permissions.md` 与 `docs/security.md`。
 
+## 缺口演示与安全
+
+`examples/gaps/` 展示“删除必需输入后”的真实输出：7 个策略缺口、9 个记录缺失项，所有未知事实保持 `missing`，不推测审批或部署。安全边界见 `SECURITY.md` 与 `docs/security.md`。
+
+一条命令复现全部本地检查：`bash scripts/check.sh`（格式、Lint、类型、测试、依赖审计；不联系 GitHub 或客户系统）。
+
 ## 文档索引
 
 - 审计与边界：`docs/repo-audit.md`

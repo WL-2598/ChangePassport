@@ -51,3 +51,28 @@ def test_invalid_config_is_rejected() -> None:
 def test_load_config_missing_file(tmp_path: Path) -> None:
     with pytest.raises(ConfigError, match="config not found"):
         load_config(tmp_path / "nope.json")
+
+
+def test_unknown_config_keys_are_rejected() -> None:
+    config = json.loads((FIXTURES / "config.json").read_text(encoding="utf-8"))
+    config["surprise"] = "typo"
+    with pytest.raises(ConfigError, match="unknown key"):
+        validate_config(config)
+
+
+def test_wrong_declared_types_are_rejected() -> None:
+    config = json.loads((FIXTURES / "config.json").read_text(encoding="utf-8"))
+    config["declared"]["purpose"] = 42
+    with pytest.raises(ConfigError, match="purpose must be a non-empty string"):
+        validate_config(config)
+
+
+def test_malformed_deployment_record_is_rejected() -> None:
+    config = json.loads((FIXTURES / "config.json").read_text(encoding="utf-8"))
+    config["declared"]["deployments"] = [{"environment": "staging"}]
+    with pytest.raises(ConfigError, match="deployed_at must be a non-empty string"):
+        validate_config(config)
+
+
+def test_valid_fixture_still_passes_strict_validation() -> None:
+    assert load_config(FIXTURES / "config.json")["version"] == 1
