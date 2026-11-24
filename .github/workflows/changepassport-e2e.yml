@@ -1,0 +1,44 @@
+# Temporary validation workflow: run the composite Action on a real GitHub runner.
+# Removed after the verification run; not part of the delivered product.
+name: ChangePassport Action E2E (temporary)
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: read
+  actions: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run local Action with offline snapshot
+        uses: ./
+        with:
+          config: tests/fixtures/config.json
+          snapshot: tests/fixtures/snapshot.json
+          output-dir: e2e-dist
+          python-version: "3.12"
+      - name: Inspect generated artifacts
+        run: |
+          ls -l e2e-dist
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          passport = json.loads(Path("e2e-dist/passport.json").read_text())
+          report = json.loads(Path("e2e-dist/verify.json").read_text())
+          markdown = Path("e2e-dist/passport.md").read_text()
+          print("status:", report["status"])
+          print("digest matches:", report["digest"]["matches"])
+          print("policy gaps:", len(report["policy"]["gaps"]))
+          assert report["status"] == "pass", report
+          assert report["schema"]["valid"] is True
+          assert report["digest"]["matches"] is True
+          assert passport["change"]["title"] == "Add signed release manifest"
+          assert "## 审批记录（仅 GitHub Reviews）" in markdown
+          assert "内容摘要只用于检测内容变化" in markdown
+          PY
