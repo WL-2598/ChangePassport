@@ -1,0 +1,25 @@
+{
+  "source": {
+    "kind": "synthetic_fixture"
+  },
+  "pagination_truncated": false,
+  "collection_errors": [],
+  "pull_request": {
+    "title": "Draft change without review evidence",
+    "html_url": "https://github.com/example-org/demo-service/pull/43",
+    "head": {
+      "sha": "3333333333333333333333333333333333333333"
+    },
+    "base": {
+      "ref": "main"
+    },
+    "user": {
+      "login": "dev-alice"
+    },
+    "merged_at": "missing"
+  },
+  "commits": [],
+  "reviews": [],
+  "check_runs": [],
+  "statuses": []
+}

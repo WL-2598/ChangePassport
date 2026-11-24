@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "repository": {
+    "owner": "example-org",
+    "name": "demo-service",
+    "url": "https://github.com/example-org/demo-service"
+  },
+  "change": {
+    "pull_request": 43,
+    "commit_sha": "missing"
+  },
+  "declared": {
+    "purpose": "missing",
+    "external_ticket": {
+      "reference": "missing",
+      "url": "missing"
+    },
+    "deployments": [],
+    "rollbacks": [],
+    "exceptions": [],
+    "exceptions_reviewed": false,
+    "rollback_plan": {
+      "description": "missing",
+      "source_url": "missing"
+    }
+  },
+  "policy": {
+    "id": "default-v1",
+    "require": [
+      "purpose",
+      "external_ticket",
+      "approval",
+      "successful_checks",
+      "deployment",
+      "rollback_plan",
+      "exception_disclosure"
+    ]
+  }
+}

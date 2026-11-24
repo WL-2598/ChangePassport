@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "repository": {
+    "owner": "example-org",
+    "name": "demo-service",
+    "url": "https://github.com/example-org/demo-service"
+  },
+  "change": {
+    "pull_request": 42,
+    "commit_sha": "missing"
+  },
+  "declared": {
+    "purpose": "Add an auditable release manifest for the checkout demo service.",
+    "external_ticket": {
+      "reference": "OPS-1842",
+      "url": "https://tickets.example.invalid/OPS-1842"
+    },
+    "deployments": [
+      {
+        "environment": "staging",
+        "deployed_at": "2026-01-15T09:40:00Z",
+        "actor": "release-bot",
+        "status": "success",
+        "source_url": "https://github.com/example-org/demo-service/actions/runs/9001"
+      }
+    ],
+    "rollbacks": [],
+    "exceptions": [],
+    "exceptions_reviewed": true,
+    "rollback_plan": {
+      "description": "Redeploy the previous image tag using the staging runbook.",
+      "source_url": "https://runbooks.example.invalid/demo-service/rollback"
+    }
+  },
+  "policy": {
+    "id": "default-v1",
+    "require": [
+      "purpose",
+      "external_ticket",
+      "approval",
+      "successful_checks",
+      "deployment",
+      "rollback_plan",
+      "exception_disclosure"
+    ]
+  }
+}
