@@ -59,7 +59,7 @@
 |---|---|
 | 仓库审计与决策规则 | 已完成（本文档） |
 | 项目章程、假设清单、访谈提纲、路线图 | 已完成（见 `docs/product-charter.md`、`docs/hypotheses.md`、`docs/interview-guide.md`、`ROADMAP.md`） |
-| Python 工程骨架、测试骨架、CI | 文件已完成；本地 Python 3.11.2 实跑 `ruff format --check .`、`ruff check .`、`mypy`、`pytest`（29 项通过）、`pip-audit --skip-editable`（无已知漏洞）。GitHub Actions 3.11/3.12 矩阵**未在推送前运行**，不写“CI 已通过” |
+| Python 工程骨架、测试骨架、CI | 已完成。本地 Python 3.11.2 实跑 `ruff format --check .`、`ruff check .`、`mypy`、`pytest`（29 项通过）、`pip-audit --skip-editable`（无已知漏洞）。GitHub Actions [run 45348090402](https://github.com/WL-2598/ChangePassport/actions/runs/45348090402) 的 3.11/3.12 矩阵全部通过（含依赖审计）；Node 20 弃用告警来自官方 action 版本，不影响结果 |
 | Schema、手工样例、脱敏 Fixture | 已完成；样例由脱敏 Fixture 生成并通过 Golden Test 逐字节比对 |
 | CLI / Collector / Action | 已完成本地离线路径与合成 HTTP 路径测试；**未在任何真实 PR 上运行 Action** |
 | 客户访谈 / 付款试点 | **未开始**；工程实现不构成商业验证 |

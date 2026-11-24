@@ -68,4 +68,4 @@ changepassport render --input dist/passport.json --verification dist/verify.json
 
 ## 验证记录
 
-本地沙箱（Python 3.11.2）：`ruff format --check .`、`ruff check .`、`mypy`、`pytest`、`pip-audit --skip-editable` 均已执行并通过。GitHub Actions 中的 Python 3.11/3.12 矩阵只能在推送后由 CI 实际验证；未运行前不写作“全部通过”。许可证为空白仓库新增的 Apache-2.0；未创建公开 Release。
+本地沙箱（Python 3.11.2）：`ruff format --check .`、`ruff check .`、`mypy`、`pytest`（29 项）、`pip-audit --skip-editable` 均已执行并通过。GitHub Actions [CI run 45348090402](https://github.com/WL-2598/ChangePassport/actions/runs/45348090402) 在 Python 3.11 与 3.12 上全部通过（格式、Lint、类型、测试、依赖审计）。**尚未验证**：真实客户 PR 上的 Action、GHES、第三方渗透测试、客户访谈与付款。许可证为空白仓库新增的 Apache-2.0；未创建公开 Release。
