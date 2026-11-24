@@ -13,7 +13,7 @@
 | `mypy`（strict，12 个源文件） | 通过 |
 | `pytest` | 34 项通过 |
 | `pip-audit --skip-editable` | 无已知漏洞（可编辑安装的本项目按设计跳过） |
-| `python -m build --wheel` | 成功；wheel 内含 `changepassport/schemas/v1/passport.schema.json` |
+| `python -m build --wheel` | 成功、无弃用告警；wheel 内含 `changepassport/schemas/v1/passport.schema.json`，元数据为 `License-Expression: Apache-2.0` + `License-File: LICENSE` |
 
 ## GitHub Actions（真实 runner）
 
@@ -26,8 +26,10 @@
 | 验证脚本一次失败（临时变量名写错） | [45368482260](https://github.com/WL-2598/ChangePassport/actions/runs/45368482260) | 失败；已修正脚本后重跑，不掩盖失败记录 |
 | Action E2E 最终复验 | [45368636797](https://github.com/WL-2598/ChangePassport/actions/runs/45368636797) | 成功 |
 | 最终 CI 复验 | [45368636747](https://github.com/WL-2598/ChangePassport/actions/runs/45368636747) | 成功 |
+| Action 版本升级后的 CI 复验 | [45424560848](https://github.com/WL-2598/ChangePassport/actions/runs/45424560848) | 成功；Node 20 弃用告警消失 |
+| Action 版本升级后的 E2E 复验 | [45424560788](https://github.com/WL-2598/ChangePassport/actions/runs/45424560788) | 成功；annotation 仅有我方结果，无官方 action 告警 |
 
-最终 E2E 的 GitHub annotation 原文：`status=pass schema=True digest=True gaps=0 source=snapshot`。
+最新 E2E 的 GitHub annotation 原文：`status=pass schema=True digest=True gaps=0 source=snapshot`。
 
 E2E 覆盖的是：checkout → 本地 composite Action → 安装 CLI → 用脱敏快照 `build` → `verify` → `render` → 上传 Artifact → 在 runner 上断言 JSON/Markdown 内容。快照模式证明**收集阶段没有网络请求**；产物来源被标为 `snapshot`，不冒充实时 GitHub API。
 
