@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0.0",
+  "generator": {
+    "name": "changepassport",
+    "version": "0.1.0",
+    "generated_at": "2026-01-15T10:30:00Z"
+  },
+  "repository": {
+    "owner": "example-org",
+    "name": "demo-service",
+    "url": "https://github.com/example-org/demo-service",
+    "default_branch": "main"
+  },
+  "policy": {
+    "id": "default-v1",
+    "required": [
+      "purpose",
+      "external_ticket",
+      "approval",
+      "successful_checks",
+      "deployment",
+      "rollback_plan",
+      "exception_disclosure"
+    ]
+  },
+  "change": {
+    "id": "PR #42",
+    "kind": "pull_request",
+    "title": "Add signed release manifest",
+    "purpose": "Add an auditable release manifest for the checkout demo service.",
+    "author": "dev-alice",
+    "merged_at": "2026-01-15T09:12:00Z",
+    "url": "https://github.com/example-org/demo-service/pull/42",
+    "head_sha": "2222222222222222222222222222222222222222",
+    "commit_shas": [
+      "1111111111111111111111111111111111111111",
+      "2222222222222222222222222222222222222222"
+    ],
+    "external_ticket": {
+      "reference": "OPS-1842",
+      "url": "https://tickets.example.invalid/OPS-1842"
+    }
+  },
+  "reviews": [
+    {
+      "reviewer": "reviewer-bob",
+      "state": "approved",
+      "submitted_at": "2026-01-15T09:05:00Z",
+      "source_url": "https://github.com/example-org/demo-service/pull/42#pullrequestreview-1",
+      "source": "snapshot"
+    },
+    {
+      "reviewer": "reviewer-carol",
+      "state": "commented",
+      "submitted_at": "2026-01-15T09:08:00Z",
+      "source_url": "https://github.com/example-org/demo-service/pull/42#pullrequestreview-2",
+      "source": "snapshot"
+    }
+  ],
+  "approvals": [
+    {
+      "reviewer": "reviewer-bob",
+      "approved_at": "2026-01-15T09:05:00Z",
+      "source_url": "https://github.com/example-org/demo-service/pull/42#pullrequestreview-1",
+      "source": "snapshot"
+    }
+  ],
+  "checks": [
+    {
+      "name": "unit-tests",
+      "conclusion": "success",
+      "completed_at": "2026-01-15T09:10:00Z",
+      "source_url": "https://github.com/example-org/demo-service/actions/runs/9001",
+      "source": "snapshot"
+    }
+  ],
+  "deployments": [
+    {
+      "environment": "staging",
+      "deployed_at": "2026-01-15T09:40:00Z",
+      "actor": "release-bot",
+      "status": "success",
+      "source_url": "https://github.com/example-org/demo-service/actions/runs/9001",
+      "source": "declared"
+    }
+  ],
+  "rollbacks": [],
+  "rollback_plan": {
+    "description": "Redeploy the previous image tag using the staging runbook.",
+    "source_url": "https://runbooks.example.invalid/demo-service/rollback"
+  },
+  "exceptions": [],
+  "exception_review": {
+    "status": "reviewed",
+    "source": "declared"
+  },
+  "completeness": {
+    "missing": [
+      {
+        "field": "rollbacks",
+        "reason": "人工未声明回滚记录",
+        "expected_source": "declared config"
+      }
+    ],
+    "unknown": []
+  },
+  "provenance": {
+    "change.title": {
+      "source": "snapshot",
+      "url": "https://github.com/example-org/demo-service/pull/42"
+    },
+    "change.purpose": {
+      "source": "declared",
+      "url": "missing"
+    },
+    "change.external_ticket": {
+      "source": "declared",
+      "url": "https://tickets.example.invalid/OPS-1842"
+    },
+    "approvals": {
+      "source": "snapshot",
+      "url": "https://github.com/example-org/demo-service/pull/42"
+    },
+    "checks": {
+      "source": "snapshot",
+      "url": "https://github.com/example-org/demo-service/pull/42"
+    },
+    "deployments": {
+      "source": "declared",
+      "url": "https://github.com/example-org/demo-service/actions/runs/9001"
+    },
+    "rollback_plan": {
+      "source": "declared",
+      "url": "https://runbooks.example.invalid/demo-service/rollback"
+    },
+    "exception_review": {
+      "source": "declared",
+      "url": "missing"
+    },
+    "content_digest": {
+      "source": "computed",
+      "url": "missing"
+    }
+  },
+  "content_digest": {
+    "algorithm": "sha256",
+    "value": "4b58be57a19d27870850811d1de751b461b422f312a9e1804fab924706bb90f8"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "source": {
+    "kind": "synthetic_fixture",
+    "collected_at": "2026-01-15T10:00:00Z",
+    "api_base": "https://api.github.com"
+  },
+  "pagination_truncated": false,
+  "collection_errors": [],
+  "pull_request": {
+    "title": "Add signed release manifest",
+    "html_url": "https://github.com/example-org/demo-service/pull/42",
+    "head": {
+      "sha": "2222222222222222222222222222222222222222"
+    },
+    "base": {
+      "ref": "main"
+    },
+    "user": {
+      "login": "dev-alice"
+    },
+    "merged_at": "2026-01-15T09:12:00Z"
+  },
+  "commits": [
+    {
+      "sha": "1111111111111111111111111111111111111111"
+    },
+    {
+      "sha": "2222222222222222222222222222222222222222"
+    }
+  ],
+  "reviews": [
+    {
+      "user": {
+        "login": "reviewer-bob"
+      },
+      "state": "APPROVED",
+      "submitted_at": "2026-01-15T09:05:00Z",
+      "html_url": "https://github.com/example-org/demo-service/pull/42#pullrequestreview-1"
+    },
+    {
+      "user": {
+        "login": "reviewer-carol"
+      },
+      "state": "COMMENTED",
+      "submitted_at": "2026-01-15T09:08:00Z",
+      "html_url": "https://github.com/example-org/demo-service/pull/42#pullrequestreview-2"
+    }
+  ],
+  "check_runs": [
+    {
+      "name": "unit-tests",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-01-15T09:10:00Z",
+      "html_url": "https://github.com/example-org/demo-service/actions/runs/9001"
+    }
+  ],
+  "statuses": []
+}

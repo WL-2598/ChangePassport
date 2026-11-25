@@ -1,0 +1,56 @@
+# Copy this file into .github/workflows/ of a test repository.
+# Minimal read-only permissions; the action never blocks the release.
+name: ChangePassport demo (report only)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+  checks: read
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Create minimal config for this PR
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          config = {
+            "version": 1,
+            "repository": {
+              "owner": "${{ github.repository_owner }}",
+              "name": "${{ github.event.repository.name }}",
+              "url": "https://github.com/${{ github.repository }}",
+            },
+            "change": {"pull_request": 0, "commit_sha": "missing"},
+            "declared": {
+              "purpose": "missing",
+              "external_ticket": {"reference": "missing", "url": "missing"},
+              "deployments": [],
+              "rollbacks": [],
+              "exceptions": [],
+              "exceptions_reviewed": False,
+              "rollback_plan": {"description": "missing", "source_url": "missing"},
+            },
+            "policy": {
+              "id": "default-v1",
+              "require": [
+                "purpose", "external_ticket", "approval", "successful_checks",
+                "deployment", "rollback_plan", "exception_disclosure"
+              ],
+            },
+          }
+          Path("changepassport.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
+          PY
+      - uses: ./
+        with:
+          config: changepassport.json
+          pull-request: ${{ github.event.pull_request.number }}

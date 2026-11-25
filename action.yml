@@ -1,0 +1,87 @@
+name: ChangePassport (report-only)
+description: Generate JSON and Markdown change evidence packets without blocking the release.
+author: ChangePassport contributors
+
+inputs:
+  config:
+    description: Path to changepassport.json in the workspace.
+    required: false
+    default: changepassport.json
+  snapshot:
+    description: Optional offline JSON snapshot. When set, no GitHub API request is made.
+    required: false
+    default: ""
+  output-dir:
+    description: Directory for passport.json, verify.json and passport.md.
+    required: false
+    default: dist
+  pull-request:
+    description: PR number override (leave empty to use the config value).
+    required: false
+    default: ""
+  commit-sha:
+    description: Commit SHA override (used when not building from a PR).
+    required: false
+    default: ""
+  token:
+    description: GitHub token with read-only permissions. Never printed or stored in the packet.
+    required: false
+    default: ${{ github.token }}
+  python-version:
+    description: Python version for the CLI.
+    required: false
+    default: "3.12"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v7.1.0
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install ChangePassport
+      shell: bash
+      run: python -m pip install --disable-pip-version-check "${{ github.action_path }}"
+
+    - name: Build from offline snapshot
+      if: inputs.snapshot != ''
+      shell: bash
+      run: >-
+        changepassport build --config "${{ inputs.config }}" --snapshot "${{ inputs.snapshot }}"
+        --out "${{ inputs.output-dir }}/passport.json"
+        --pull-request "${{ inputs.pull-request }}" --commit-sha "${{ inputs.commit-sha }}"
+
+    - name: Build from GitHub API
+      if: inputs.snapshot == ''
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+      run: >-
+        changepassport build --config "${{ inputs.config }}"
+        --out "${{ inputs.output-dir }}/passport.json"
+        --pull-request "${{ inputs.pull-request }}" --commit-sha "${{ inputs.commit-sha }}"
+
+    - name: Verify (report-only, never blocks a release)
+      shell: bash
+      run: |
+        changepassport verify --input "${{ inputs.output-dir }}/passport.json" \
+          --out "${{ inputs.output-dir }}/verify.json" || \
+          echo "::warning::ChangePassport verification reported a problem; see the artifact."
+
+    - name: Render Markdown
+      shell: bash
+      run: >-
+        changepassport render --input "${{ inputs.output-dir }}/passport.json"
+        --verification "${{ inputs.output-dir }}/verify.json"
+        --out "${{ inputs.output-dir }}/passport.md"
+
+    - name: Upload evidence artifact
+      uses: actions/upload-artifact@v7.0.2
+      with:
+        name: changepassport-${{ github.run_id }}-${{ github.run_attempt }}
+        path: |
+          ${{ inputs.output-dir }}/passport.json
+          ${{ inputs.output-dir }}/verify.json
+          ${{ inputs.output-dir }}/passport.md
+        if-no-files-found: error

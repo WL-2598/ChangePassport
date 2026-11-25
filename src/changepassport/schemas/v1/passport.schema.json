@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/WL-2598/ChangePassport/schemas/v1/passport.schema.json",
+  "title": "ChangePassport evidence packet v1",
+  "description": "Facts are GitHub-derived or human-declared. Absent facts use the literal strings 'missing' or 'unknown'. The content digest detects changes only; it is not a signature, tamper-proof record or trusted timestamp.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generator",
+    "repository",
+    "policy",
+    "change",
+    "reviews",
+    "approvals",
+    "checks",
+    "deployments",
+    "rollbacks",
+    "rollback_plan",
+    "exceptions",
+    "exception_review",
+    "completeness",
+    "provenance",
+    "content_digest"
+  ],
+  "$defs": {
+    "text": { "type": "string", "minLength": 1, "maxLength": 20000 },
+    "source": {
+      "type": "string",
+      "enum": ["github_api", "snapshot", "declared", "computed", "missing", "unknown"]
+    },
+    "provenance_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "url"],
+      "properties": {
+        "source": { "$ref": "#/$defs/source" },
+        "url": { "$ref": "#/$defs/text" }
+      }
+    },
+    "gap_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "reason", "expected_source"],
+      "properties": {
+        "field": { "$ref": "#/$defs/text" },
+        "reason": { "$ref": "#/$defs/text" },
+        "expected_source": { "$ref": "#/$defs/text" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer", "state", "submitted_at", "source_url", "source"],
+      "properties": {
+        "reviewer": { "$ref": "#/$defs/text" },
+        "state": { "$ref": "#/$defs/text" },
+        "submitted_at": { "$ref": "#/$defs/text" },
+        "source_url": { "$ref": "#/$defs/text" },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer", "approved_at", "source_url", "source"],
+      "properties": {
+        "reviewer": { "$ref": "#/$defs/text" },
+        "approved_at": { "$ref": "#/$defs/text" },
+        "source_url": { "$ref": "#/$defs/text" },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "conclusion", "completed_at", "source_url", "source"],
+      "properties": {
+        "name": { "$ref": "#/$defs/text" },
+        "conclusion": { "$ref": "#/$defs/text" },
+        "completed_at": { "$ref": "#/$defs/text" },
+        "source_url": { "$ref": "#/$defs/text" },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["environment", "deployed_at", "actor", "status", "source_url", "source"],
+      "properties": {
+        "environment": { "$ref": "#/$defs/text" },
+        "deployed_at": { "$ref": "#/$defs/text" },
+        "actor": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/text" },
+        "source_url": { "$ref": "#/$defs/text" },
+        "source": { "const": "declared" }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["environment", "rolled_back_at", "actor", "notes", "source_url", "source"],
+      "properties": {
+        "environment": { "$ref": "#/$defs/text" },
+        "rolled_back_at": { "$ref": "#/$defs/text" },
+        "actor": { "$ref": "#/$defs/text" },
+        "notes": { "$ref": "#/$defs/text" },
+        "source_url": { "$ref": "#/$defs/text" },
+        "source": { "const": "declared" }
+      }
+    },
+    "exception": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "description", "approved_by", "source_url", "source"],
+      "properties": {
+        "type": { "$ref": "#/$defs/text" },
+        "description": { "$ref": "#/$defs/text" },
+        "approved_by": { "$ref": "#/$defs/text" },
+        "source_url": { "$ref": "#/$defs/text" },
+        "source": { "const": "declared" }
+      }
+    }
+  },
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "generated_at"],
+      "properties": {
+        "name": { "$ref": "#/$defs/text" },
+        "version": { "$ref": "#/$defs/text" },
+        "generated_at": { "$ref": "#/$defs/text" }
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "name", "url", "default_branch"],
+      "properties": {
+        "owner": { "$ref": "#/$defs/text" },
+        "name": { "$ref": "#/$defs/text" },
+        "url": { "$ref": "#/$defs/text" },
+        "default_branch": { "$ref": "#/$defs/text" }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "required"],
+      "properties": {
+        "id": { "$ref": "#/$defs/text" },
+        "required": { "type": "array", "items": { "$ref": "#/$defs/text" } }
+      }
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "kind", "title", "purpose", "author", "merged_at", "url", "head_sha",
+        "commit_shas", "external_ticket"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/text" },
+        "kind": { "enum": ["pull_request", "commit", "missing", "unknown"] },
+        "title": { "$ref": "#/$defs/text" },
+        "purpose": { "$ref": "#/$defs/text" },
+        "author": { "$ref": "#/$defs/text" },
+        "merged_at": { "$ref": "#/$defs/text" },
+        "url": { "$ref": "#/$defs/text" },
+        "head_sha": { "$ref": "#/$defs/text" },
+        "commit_shas": { "type": "array", "items": { "$ref": "#/$defs/text" } },
+        "external_ticket": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reference", "url"],
+          "properties": {
+            "reference": { "$ref": "#/$defs/text" },
+            "url": { "$ref": "#/$defs/text" }
+          }
+        }
+      }
+    },
+    "reviews": { "type": "array", "items": { "$ref": "#/$defs/review" } },
+    "approvals": { "type": "array", "items": { "$ref": "#/$defs/approval" } },
+    "checks": { "type": "array", "items": { "$ref": "#/$defs/check" } },
+    "deployments": { "type": "array", "items": { "$ref": "#/$defs/deployment" } },
+    "rollbacks": { "type": "array", "items": { "$ref": "#/$defs/rollback" } },
+    "rollback_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "source_url"],
+      "properties": {
+        "description": { "$ref": "#/$defs/text" },
+        "source_url": { "$ref": "#/$defs/text" }
+      }
+    },
+    "exceptions": { "type": "array", "items": { "$ref": "#/$defs/exception" } },
+    "exception_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "source"],
+      "properties": {
+        "status": { "enum": ["reviewed", "not_reviewed", "missing", "unknown"] },
+        "source": { "const": "declared" }
+      }
+    },
+    "completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["missing", "unknown"],
+      "properties": {
+        "missing": { "type": "array", "items": { "$ref": "#/$defs/gap_entry" } },
+        "unknown": { "type": "array", "items": { "$ref": "#/$defs/text" } }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/provenance_record" }
+    },
+    "content_digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "value": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

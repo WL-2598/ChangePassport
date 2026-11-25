@@ -1,0 +1,89 @@
+{
+  "status": "gaps",
+  "schema": {
+    "valid": true,
+    "errors": []
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "matches": true
+  },
+  "policy": {
+    "id": "default-v1",
+    "results": [
+      {
+        "id": "purpose",
+        "status": "gap",
+        "detail": "change.purpose 为 missing"
+      },
+      {
+        "id": "external_ticket",
+        "status": "gap",
+        "detail": "change.external_ticket 缺少编号或链接"
+      },
+      {
+        "id": "approval",
+        "status": "gap",
+        "detail": "没有从 GitHub Reviews 中取到审批记录（未推测审批）"
+      },
+      {
+        "id": "successful_checks",
+        "status": "gap",
+        "detail": "没有 Check 记录"
+      },
+      {
+        "id": "deployment",
+        "status": "gap",
+        "detail": "没有含环境与时间的人工声明部署记录"
+      },
+      {
+        "id": "rollback_plan",
+        "status": "gap",
+        "detail": "rollback_plan.source_url 为 missing"
+      },
+      {
+        "id": "exception_disclosure",
+        "status": "gap",
+        "detail": "尚未人工确认例外披露状态"
+      }
+    ],
+    "gaps": [
+      {
+        "id": "purpose",
+        "status": "gap",
+        "detail": "change.purpose 为 missing"
+      },
+      {
+        "id": "external_ticket",
+        "status": "gap",
+        "detail": "change.external_ticket 缺少编号或链接"
+      },
+      {
+        "id": "approval",
+        "status": "gap",
+        "detail": "没有从 GitHub Reviews 中取到审批记录（未推测审批）"
+      },
+      {
+        "id": "successful_checks",
+        "status": "gap",
+        "detail": "没有 Check 记录"
+      },
+      {
+        "id": "deployment",
+        "status": "gap",
+        "detail": "没有含环境与时间的人工声明部署记录"
+      },
+      {
+        "id": "rollback_plan",
+        "status": "gap",
+        "detail": "rollback_plan.source_url 为 missing"
+      },
+      {
+        "id": "exception_disclosure",
+        "status": "gap",
+        "detail": "尚未人工确认例外披露状态"
+      }
+    ]
+  },
+  "notice": "内容摘要只检测内容变化；不是签名、防篡改证明或可信时间戳，也不构成审计结论。"
+}
