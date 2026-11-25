@@ -81,7 +81,7 @@ class GitHubCollector:
         self.collection_errors: list[dict[str, str]] = []
         self.pagination_truncated = False
 
-    def _get_all(self, path: str) -> list[dict[str, Any]]:
+    def _get_all(self, path: str, list_key: str | None = None) -> list[dict[str, Any]]:
         items: list[dict[str, Any]] = []
         url: str | None = self.api_base + path
         for _ in range(MAX_PAGES):
@@ -111,10 +111,15 @@ class GitHubCollector:
                 raise CollectorError(
                     f"GitHub API request failed for {path}: {type(exc).__name__}"
                 ) from exc
-            if isinstance(payload, dict) and "message" in payload and "url" not in payload:
-                raise CollectorError(
-                    f"GitHub API error for {path}: {str(payload['message'])[:120]}"
+            if isinstance(payload, dict) and list_key and isinstance(payload.get(list_key), list):
+                # check-runs is wrapped in {"total_count": n, "check_runs": [...]}.
+                payload = payload[list_key]
+            elif isinstance(payload, dict) and "message" in payload and "url" not in payload:
+                # An API error must not abort the whole packet; record it as a gap.
+                self.collection_errors.append(
+                    {"path": path, "status": str(payload.get("message", "api_error"))[:80]}
                 )
+                return items
             if not isinstance(payload, list):
                 raise CollectorError(f"unexpected GitHub API response for {path}")
             items.extend(item for item in payload if isinstance(item, dict))
@@ -186,7 +191,11 @@ class GitHubCollector:
             reviews = []
 
         check_runs = (
-            self._get_all(f"{repo}/commits/{head_sha}/check-runs?per_page=100") if head_sha else []
+            self._get_all(
+                f"{repo}/commits/{head_sha}/check-runs?per_page=100", list_key="check_runs"
+            )
+            if head_sha
+            else []
         )
         statuses = (
             self._get_all(f"{repo}/commits/{head_sha}/statuses?per_page=100") if head_sha else []

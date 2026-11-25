@@ -76,3 +76,42 @@ def test_collector_rejects_external_pagination_link() -> None:
     collector = GitHubCollector(opener=opener)
     with pytest.raises(CollectorError, match="outside the GitHub API"):
         collector.collect("a", "b", 42, "missing")
+
+
+def test_check_runs_wrapped_response_is_unwrapped() -> None:
+    def opener(request: Any, timeout: int) -> FakeResponse:
+        if request.full_url.endswith("/pulls/42"):
+            return FakeResponse({"head": {"sha": "abc"}})
+        if "check-runs" in request.full_url:
+            return FakeResponse(
+                {
+                    "total_count": 1,
+                    "check_runs": [
+                        {
+                            "name": "quality (3.12)",
+                            "status": "completed",
+                            "conclusion": "success",
+                            "html_url": "https://github.com/a/b/actions/runs/1",
+                        }
+                    ],
+                }
+            )
+        return FakeResponse([])
+
+    snapshot = GitHubCollector(opener=opener).collect("a", "b", 42, "missing")
+    assert [item["name"] for item in snapshot["check_runs"]] == ["quality (3.12)"]
+    assert snapshot["collection_errors"] == []
+
+
+def test_api_error_is_recorded_as_gap_not_fatal() -> None:
+    def opener(request: Any, timeout: int) -> FakeResponse:
+        if request.full_url.endswith("/pulls/42"):
+            return FakeResponse({"head": {"sha": "abc"}})
+        return FakeResponse({"message": "Resource not accessible by integration"})
+
+    snapshot = GitHubCollector(opener=opener).collect("a", "b", 42, "missing")
+    assert snapshot["check_runs"] == []
+    assert any("check-runs" in item["path"] for item in snapshot["collection_errors"])
+    assert all(
+        "Resource not accessible" in item["status"] for item in snapshot["collection_errors"]
+    )

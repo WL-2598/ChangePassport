@@ -76,4 +76,4 @@ changepassport render --input dist/passport.json --verification dist/verify.json
 
 ## 验证记录
 
-本地沙箱（Python 3.11.2）：`ruff format --check .`、`ruff check .`、`mypy`、`pytest`（34 项）、`pip-audit --skip-editable` 均已执行并通过。GitHub Actions 的 CI 矩阵与 [Action E2E run 45368636797](https://github.com/WL-2598/ChangePassport/actions/runs/45368636797) 均已实际跑通；完整 run ID 与失败记录见 `docs/validation-record.md`。**尚未验证**：真实客户 PR 上的人类 Review + Action、GHES、第三方渗透测试、客户访谈与付款。许可证为空白仓库新增的 Apache-2.0；未创建公开 Release。
+本地沙箱（Python 3.11.2）：`ruff format --check .`、`ruff check .`、`mypy`、`pytest`（36 项）、`pip-audit --skip-editable` 均已执行并通过。GitHub Actions 的 CI 矩阵与 [Action E2E run 45368636797](https://github.com/WL-2598/ChangePassport/actions/runs/45368636797) 均已实际跑通；完整 run ID 与失败记录见 `docs/validation-record.md`。**尚未验证**：真实客户 PR 上的人类 Review + Action、GHES、第三方渗透测试、客户访谈与付款。许可证为空白仓库新增的 Apache-2.0；未创建公开 Release。

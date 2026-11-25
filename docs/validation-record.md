@@ -11,9 +11,24 @@
 | `ruff format --check .` | 通过 |
 | `ruff check .` | 通过 |
 | `mypy`（strict，12 个源文件） | 通过 |
-| `pytest` | 34 项通过 |
+| `pytest` | 36 项通过 |
 | `pip-audit --skip-editable` | 无已知漏洞（可编辑安装的本项目按设计跳过） |
 | `python -m build --wheel` | 成功、无弃用告警；wheel 内含 `changepassport/schemas/v1/passport.schema.json`，元数据为 `License-Expression: Apache-2.0` + `License-File: LICENSE` |
+
+## 真实 GitHub REST API 采集（匿名、只读）
+
+对本仓库当前 commit `df911a1` 运行 `changepassport build`（**不带 `--snapshot`**），只访问 `https://api.github.com`，未使用 token：
+
+```text
+Built /tmp/cp-live-passport.json from GitHub API: 0 approvals, 4 checks, 10 recorded gaps.
+change.id: df911a1707a5    commits: 1    checks: 4
+```
+
+4 条 Check 来自该 commit 上真实存在的 CI run；没有 Review、部署和人工声明，因此保留 10 个缺口，`verify --strict` 按预期退出 1。
+
+**这次运行发现并修复了一个真实 bug**：`/check-runs` 返回的是 `{total_count, check_runs: [...]}` 包装对象，而收集器原按数组解析，导致首次 live build 失败。现已在 `collectors/github.py` 中解包，并新增两个单元测试：包装响应解包、API 错误降级为缺口而非中断。修复后重新 live build 成功。这证明“只用合成 Fixture 测试”不足以覆盖真实 API 形态。
+
+仍未验证：带人类 Review 的真实 PR 采集、GHES、带 token 的私有仓库。
 
 ## GitHub Actions（真实 runner）
 

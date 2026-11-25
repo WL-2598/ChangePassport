@@ -12,6 +12,10 @@
 - `examples/gaps/`：删除必需输入后的 JSON/验证报告/Markdown 缺口示例，含 Golden Test。
 - `scripts/check.sh`：一条命令复现全部本地质量门禁。
 - 根目录 `SECURITY.md`，指向完整安全与权限文档。
+
+### Fixed
+
+- 真实 GitHub API 采集发现 `/check-runs` 返回包装对象而非数组；收集器现正确解包，API 错误改为记录缺口而非中断整个 build（新增 2 个单元测试）。
 - 仓库审计报告与项目章程、假设清单、访谈提纲、验证阶段路线图。
 - Python 工程骨架、测试与 CI（格式、类型、测试、依赖安全检查）。
 - `schemas/v1/passport.schema.json`、手工样例与脱敏 Fixture。
